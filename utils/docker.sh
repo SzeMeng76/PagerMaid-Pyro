@@ -14,9 +14,12 @@ then
   exit 1
 fi
 
+# 指定要安装的版本
+PAGERMAID_VERSION="1.5.3-dev"
+
 welcome () {
     echo
-    echo "安装即将开始"
+    echo "安装即将开始，将安装 PagerMaid-Pyro 版本: $PAGERMAID_VERSION"
     echo "如果您想取消安装，"
     echo "请在 5 秒钟内按 Ctrl+C 终止此脚本。"
     echo
@@ -50,9 +53,9 @@ access_check () {
 build_docker () {
     printf "请输入 PagerMaid 容器的名称："
     read -r container_name <&1
-    echo "正在拉取 Docker 镜像 . . ."
+    echo "正在拉取 Docker 镜像版本 $PAGERMAID_VERSION . . ."
     docker rm -f "$container_name" > /dev/null 2>&1
-    docker pull teampgm/pagermaid_pyro:1.5.3-dev
+    docker pull teampgm/pagermaid_pyro:$PAGERMAID_VERSION
 }
 
 need_web () {
@@ -99,10 +102,10 @@ start_docker () {
     echo "正在启动 Docker 容器 . . ."
     case $PGM_WEB in
         true)
-            docker run -dit --restart=always --name="$container_name" --hostname="$container_name" -e WEB_ENABLE="$PGM_WEB" -e WEB_SECRET_KEY="$admin_password" -e WEB_HOST=0.0.0.0 -e WEB_PORT=3333 -e WEB_LOGIN="$PGM_WEB_LOGIN" -p 3333:3333 teampgm/pagermaid_pyro:1.5.3-dev <&1
+            docker run -dit --restart=always --name="$container_name" --hostname="$container_name" -e WEB_ENABLE="$PGM_WEB" -e WEB_SECRET_KEY="$admin_password" -e WEB_HOST=0.0.0.0 -e WEB_PORT=3333 -e WEB_LOGIN="$PGM_WEB_LOGIN" -p 3333:3333 teampgm/pagermaid_pyro:$PAGERMAID_VERSION <&1
             ;;
         *)
-            docker run -dit --restart=always --name="$container_name" --hostname="$container_name" teampgm/pagermaid_pyro:1.5.3-dev <&1
+            docker run -dit --restart=always --name="$container_name" --hostname="$container_name" teampgm/pagermaid_pyro:$PAGERMAID_VERSION <&1
             ;;
     esac
     echo
@@ -175,10 +178,10 @@ data_persistence () {
             # 启动新容器
             case $PGM_WEB in
                  true)
-                     docker run -dit $mount_args --restart=always --name="$container_name" --hostname="$container_name" -e WEB_ENABLE="$PGM_WEB" -e WEB_SECRET_KEY="$admin_password" -e WEB_HOST=0.0.0.0 -e WEB_PORT=3333 -p 3333:3333 teampgm/pagermaid_pyro <&1
+                     docker run -dit $mount_args --restart=always --name="$container_name" --hostname="$container_name" -e WEB_ENABLE="$PGM_WEB" -e WEB_SECRET_KEY="$admin_password" -e WEB_HOST=0.0.0.0 -e WEB_PORT=3333 -p 3333:3333 teampgm/pagermaid_pyro:$PAGERMAID_VERSION <&1
                      ;;
                  *)
-                     docker run -dit $mount_args --restart=always --name="$container_name" --hostname="$container_name" teampgm/pagermaid_pyro <&1
+                     docker run -dit $mount_args --restart=always --name="$container_name" --hostname="$container_name" teampgm/pagermaid_pyro:$PAGERMAID_VERSION <&1
                      ;;
             esac
 
@@ -297,6 +300,7 @@ shon_online () {
     echo ""
     echo ""
     echo "欢迎使用 PagerMaid-Pyro Docker 一键安装脚本。"
+    echo "当前将安装版本: $PAGERMAID_VERSION"
     echo
     echo "请选择您需要进行的操作:"
     echo "  1) Docker 安装 PagerMaid"
@@ -308,7 +312,7 @@ shon_online () {
     echo "  7) PagerMaid 数据持久化"
     echo "  8) 退出脚本"
     echo
-    echo "     Version：2.3.0"
+    echo "     Version：2.3.0-custom"
     echo
     echo -n "请输入编号: "
     read -r N <&1
