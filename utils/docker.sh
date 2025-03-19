@@ -15,7 +15,7 @@ then
 fi
 
 # 指定要安装的版本
-PAGERMAID_VERSION="1.5.3-dev"
+PAGERMAID_VERSION="1.5.1"
 
 welcome () {
     echo
