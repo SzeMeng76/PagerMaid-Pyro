@@ -52,7 +52,7 @@ build_docker () {
     read -r container_name <&1
     echo "正在拉取 Docker 镜像 . . ."
     docker rm -f "$container_name" > /dev/null 2>&1
-    docker pull teampgm/pagermaid_pyro:1.5.3-dev
+    docker pull teampgm/pagermaid_pyro:1.5.1
 }
 
 need_web () {
